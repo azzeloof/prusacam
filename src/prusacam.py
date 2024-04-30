@@ -1,10 +1,7 @@
 import time
 import requests
 import secret
-from io import BytesIO
 from picamera2 import Picamera2
-
-import httpx
 
 class API:
     def __init__(self, token, fingerprint):
@@ -21,9 +18,12 @@ class API:
             'token': self.token
         }
         response = None
-        with open("current.jpg", 'rb') as f:
-            image = f.read()
-            response = requests.put(url, headers=headers, data=image, stream=True, verify=False)
+        try:
+            with open("current.jpg", 'rb') as f:
+                image = f.read()
+                response = requests.put(url, headers=headers, data=image, stream=True, verify=False)
+        except:
+            print("Error uploading image")
         return response
 
 
@@ -32,7 +32,6 @@ class Camera:
         self.cam = Picamera2()
         self.config = self.cam.create_still_configuration(main={"size": (6000, 4000)})
         self.cam.configure(self.config)
-
         self.cam.start()
 
     def snap(self):
@@ -42,12 +41,17 @@ class Camera:
         self.cam.close()
 
 
-if __name__=="__main__":
+if __name__ == '__main__':
+    timeout = 10
+    running = True
     camera = Camera()
     api = API(secret.TOKEN, secret.FINGERPRINT)
-    time.sleep(2)
-    camera.snap()
     time.sleep(1)
-    print(api.uploadSnapshot().text)
-    time.sleep(2)
+    try:
+        while running:
+            camera.snap()
+            resp = api.uploadSnapshot()
+            time.sleep(timeout)
+    except KeyboardInterrupt:
+        print("\nexiting")
     camera.close()
