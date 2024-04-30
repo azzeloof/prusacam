@@ -44,4 +44,4 @@ replacing `[PATH]` with the path to the repo you cloned. For example, on my pi, 
 - Start the service by running `sudo systemctl start prusacam.service`
 - Check that the service is working by running `sudo systemctl status prusacam.service`
 
-And that should be it! Images should now be appearing on the Prusacam dashboard, and the service should autostart with you power on the pi.
+And that should be it! Images should now be appearing on the Prusacam dashboard, and the service should autostart when you power on the pi.
