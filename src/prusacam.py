@@ -1,3 +1,7 @@
+# prusacam.py
+# Adam Zeloof
+# 4/29/2024
+
 import time
 import requests
 import secret
